@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="mainApp">
+    <head>
+        <meta charset="utf-8" />
+        <title>Main</title>        
+        <link rel="stylesheet" href="web/css/style.css">
+        <script src="js/vendor/angular.js"></script>
+        <script src="js/vendor/angular-route.js"></script>
+        <script src="js/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Main</h1>
+        </header>
+        <section ng-controller="mainController">
+            {{fruit}}
+            <input ng-model="fruit" />
+        </section>
+        <section ng-controller="mainController">
+            La {{fruit2.Nom}} de couleur {{fruit2.Couleur}} périme le {{fruit2.Peremption  | dateFilter}}
+            <input ng-model="fruit2.Nom" />
+            <input ng-model="fruit2.Couleur" />
+            <input ng-model="fruit2.Peremption | dateFilter"/>
+        </section>    
+        
+        <section  ng-controller="mainController">
+            <ul>
+                <li ng-repeat="fruit in fruits | orderBy:'Nom'">la {{fruit.Nom}} de couleur {{fruit.Couleur}} périme le {{fruit.Peremption | dateFilter}}</li>
+            </ul>
+        </section>
+        
+        <section  ng-controller="mainController">
+            <ul>
+                <li ng-repeat="fruit in fruits | orderBy:'Couleur'">la {{fruit.Nom}} de couleur {{fruit.Couleur}} périme le {{fruit.Peremption | dateFilter}}</li>
+            </ul>
+        </section>
+        
+        <section  ng-controller="mainController">
+            <ul>
+                <li ng-repeat="fruit in fruits"><main-directive></main-directive></li>
+            </ul>        
+        </section>
+        
+        <section  ng-controller="mainController">
+            <ul>
+                <main-directive2></main-directive2>
+            </ul>        
+        </section>
+        
+        <section  ng-controller="mainController">
+            <ul>
+                <main-directive2></main-directive2>
+            </ul>
+        </section>
+        
+        <div ng-controller="secondController">
+                Mon panier contient : {{panier}}
+        </div>
+    </body>
+</html>
