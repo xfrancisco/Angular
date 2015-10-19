@@ -24,7 +24,7 @@ var uriUtil = require('mongodb-uri');
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
                 replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
-//var dbURI = 'mongodb://webuser:webuser@ds041154.mongolab.com:41154/xf81';
+//var dbURI = 'mongodb://webuser:@ds041154.mongolab.com:41154/xf81';
 var dbURI = 'mongodb://localhost:27017/xf81';
 var mongooseUri = uriUtil.formatMongoose(dbURI);
 
