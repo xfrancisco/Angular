@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="fr" ng-app="comptesApp">
+<head>
+<title> Gestion des comptes </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="css/nav.css" rel="stylesheet" type="text/css" media="all"/>
+<link href='http://fonts.googleapis.com/css?family=Carrois+Gothic+SC' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+<script type="text/javascript" src="js/Chart.js"></script>
+<script type="text/javascript" src="js/jquery.easing.js"></script>
+<script type="text/javascript" src="js/jquery.ulslide.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/comptesApp.js"></script>
+</head>
+<body>			       
+    <div class="wrap">	 
+	      <div class="header">
+	      	  <div class="header_top">
+					  <div class="menu">
+						  <a class="toggleMenu" href="#"><img src="images/nav.png" alt="" /></a>
+							<ul class="nav">
+								<li class="active"><a href="#"><i><img src="images/favourite.png" alt="" /></i>Comptes</a></li  >
+                                <li><a href="#"><i><img src="images/comments.png" alt="" /></i>A Propos</a></li>
+				            <div class="clear"></div>
+						    </ul>
+							<script type="text/javascript" src="js/responsive-nav.js"></script>
+				        </div>	
+					  <div class="profile_details">
+				    		   <div id="loginContainer">
+				                  <a id="loginButton" class=""><span>Xavier</span></a>   
+				                    <div id="loginBox">                
+				                      <form id="loginForm">
+				                        <fieldset id="body">
+				                            <div class="user-info">
+							        			<h4>Bonjour,<a href="#"> Xavier</a></h4>
+							        			<ul>
+							        				<li class="profile active"><a href="#">Profil</a></li>
+							        				<li class="logout"><a href="#">Se déconnecter</a></li>
+							        				<div class="clear"></div>		
+							        			</ul>
+							        		</div>			                            
+				                        </fieldset>
+				                    </form>
+				                </div>
+				            </div>
+				             <div class="profile_img">	
+				             	<a href="#"><img src="images/profile_img40x40.jpg" alt="" />	</a>
+				             </div>		
+				             <div class="clear"></div>		  	
+					    </div>	
+		 		      <div class="clear"></div>				 
+				   </div>
+			</div>	  					     
+	</div>
+	  <div class="main">  
+	    <div class="wrap">  		 
+	       <div class="column_left">	          
+	    		 <div class="menu_box">
+	    		 	 <h3>Menu</h3>
+	    		 	   <div class="menu_box_list">
+				      		<ul>
+						  		<li class="active"><a href="#" class="events"><span>Events</span><label class="digits">5</label><div class="clear"></div></a></li>
+				    		</ul>
+				      </div>
+	    		 </div>
+		         <div class="graph">
+		             	<canvas id="line-chart"> </canvas>
+		             	<script>
+							var lineChartData = {
+								labels : ["Apr","May","Jun"],
+								datasets : [									
+									{
+										fillColor : "rgba(255, 255, 255, 0)",
+										strokeColor : "#FFF",
+										pointColor : "#35aadc",
+										pointStrokeColor : "#FFF",
+										data : [21,48,35]
+									}
+								]
+								
+							}
+					
+						var myLine = new Chart(document.getElementById("line-chart").getContext("2d")).Line(lineChartData);
+						
+						</script>
+		             	<!---
+		             	<img src="images/graph.png" alt="" />
+		             	------->
+		             	<div class="graph_list">
+		             		 <div class="week-month-year">
+		             		 	<p><a href="#">Week</a></p>
+		             		 	<p><a href="#" class="active">Month</a></p>
+		             		 	<p><a href="#">year</a></p>
+		             		 	<div class="clear"></div>
+		             		 </div>
+				      			<ul>
+						  		    <li><a href="#"><span class="day_name">Apr</span> 2013 
+						  			<label class="digits"><span>+</span>21<em>%</em></label><div class="clear"></div></a></li>
+						  			<li class="active"><a href="#"><span class="day_name">May</span> 2013 
+						  			<label class="digits"><span>+</span>48<em>%</em></label><div class="clear"></div></a></li>
+						  			<li><a href="#"><span class="day_name">Jun</span> 2013 
+						  			<label class="digits"><span>+</span>35<em>%</em> </label><div class="clear"></div></a></li>						  			
+				    		</ul>
+				      </div>
+		             </div>
+		                 
+	  		</div>
+            <div id="column-middle" ng-include="'middle.html'"></div>
+            <div id="column-right" ng-include="'right.html'"></div>
+    	    <div class="clear"></div>
+ 	 </div>
+   </div>
+  
+</body>
+</html>

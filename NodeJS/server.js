@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;        // set our port
 
-var Bear     = require('./app/models/bear');
+var Comptes     = require('./app/models/comptes');
 
 var mongoose   = require('mongoose');
 var uriUtil = require('mongodb-uri');
@@ -47,40 +47,86 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    res.json({ message: "Bienvenue sur l'API comptes!" });   
 });
 
 // more routes for our API will happen here
 
-// on routes that end in /bears
+// on routes that end in /comptes
 // ----------------------------------------------------
-router.route('/bears')
+var comptes = router.route('/comptes');
 
-    // create a bear (accessed at POST api/bears)
-    .post(function(req, res) {
-        var bear = new Bear();      // create a new instance of the Bear model
-        bear.name = req.body.name;  // set the bears name (comes from the request)
-        console.log('Le nom de mon ours est ' + req.body.name);
-        // save the bear and check for errors
-        bear.save(function(err) {
+comptes.post(function(req, res) {
+        var compte = new Comptes();      
+        compte.officialAmount = parseFloat(req.body.officialAmount) * 100;
+        compte.unofficialAmount = parseFloat(req.body.unofficialAmount) * 100;
+        compte.dueDate = req.body.dueDate;
+        
+        compte.save(function(err) {
             if (err)
                 res.send(err);
 
-            res.json({ message: 'Bear created!' });
+            res.json({ message: 'Comptes created!' });
         });
         
-    })
+    });
 
-    // get all the bears (accessed at GET api/bears)
-    .get(function(req, res) {
-        Bear.find(function(err, bears) {
+comptes.get(function(req, res) {
+        Comptes.find({}).sort('dueDate').exec(function(err, comptes) {
             if (err)
                 res.send(err);
 
-            res.json(bears);
+            res.json(comptes);
         });
     });
 
+    
+comptes.delete(function(req, res) {
+        Comptes.remove({}, function(err, comptes) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Successfully deleted' });
+        });
+    });
+
+
+var comptesByDate = router.route('/comptes/:compteId');
+
+comptesByDate.get(function(req, res) {
+        Comptes.findById(req.params.compteId, function(err, compte) {
+            if (err)
+                res.send(err);
+            res.json(compte);
+        });
+    });
+
+comptesByDate.put(function(req, res) {
+    Comptes.findById(req.params.compteId, function(err, compte) {
+            if (err)
+                res.send(err);
+            compte.officialPaid = req.body.officialPaid;
+            compte.unofficialPaid = req.body.officialPaid;
+            if (compte.officialPaid) {
+                compte.officialPaidDate = new Date();
+            }
+            
+            if (compte.unofficialPaid) {
+                compte.unofficialPaidDate = new Date();
+            }
+            
+            // save the bear
+            compte.save(function(err) {
+                if (err)
+                    res.send(err);
+
+                res.json({ message: 'Compte updated!' });
+            });
+
+        });
+    });
+
+/*
 // on routes that end in /bears/:bear_id
 // ----------------------------------------------------
 router.route('/bears/:bear_id')
@@ -122,7 +168,7 @@ router.route('/bears/:bear_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
-
+*/
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
