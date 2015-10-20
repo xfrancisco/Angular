@@ -2,13 +2,15 @@
     <div class="tweets">
         <h3><i><img src="images/tweets.png" alt="" /> </i>Derniers messages</h3>		              
         <div class="tweets_list">
-            <table>
-                <tr ng-repeat="detail in details">
-                    <td>{{detail.officialAmount}}</td>
-                    <td>{{detail.unofficialAmount}}</td>
-                    <td>{{detail.dueDate}}</td>
-                </tr>
-            </table>
+            <ul>
+                <li ng-repeat="detail in details">
+                    {{detail.officialAmount}}
+                    
+                    {{detail.unofficialAmount}}
+                    
+                    {{detail.dueDate | date: 'dd/MM/yyyy'}}
+                </li>
+            </ul>
         </div>
     </div>
 </div>

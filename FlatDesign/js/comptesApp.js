@@ -1,6 +1,6 @@
 'use strict';
 
-var comptesApp = angular.module('comptesApp', ['comptesModule', 'routageModule']);
+var comptesApp = angular.module('comptesApp', ['comptesModule', 'routageModule', 'ngTable']);
 
 var comptesModule = angular.module('comptesModule', []);
 var routageModule = angular.module('routageModule', ['ngRoute']);

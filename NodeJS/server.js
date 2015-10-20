@@ -24,9 +24,25 @@ var uriUtil = require('mongodb-uri');
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
                 replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
-//var dbURI = 'mongodb://webuser:@ds041154.mongolab.com:41154/xf81';
-var dbURI = 'mongodb://localhost:27017/xf81';
+//var args = process.argv.slice(2);
+var isInit = false;
+var isOnline = false;
+process.argv.forEach(function (val, index, array) {
+    if (val == 'init')
+        isInit = true;
+    if (val == 'online')
+        isOnline = true;
+});
+
+var dbURI = '';
+if (isOnline)
+    dbUri = 'mongodb://webuser:@ds041154.mongolab.com:41154/xf81';
+else
+    dbURI = 'mongodb://localhost:27017/xf81';
+
 var mongooseUri = uriUtil.formatMongoose(dbURI);
+
+
 
 mongoose.connect(mongooseUri, function(err) {
     if (err) 
@@ -172,6 +188,36 @@ router.route('/bears/:bear_id')
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+if (isInit) {
+    console.log('**************Initialisation BDD****************');
+    Comptes.remove({}, function(err, comptes) {
+        if (err) {
+            console.log('Erreur lors de la suppression');
+            exit;
+        }
+        var startDate = new Date("October 05, 2015 00:00:00");
+        var maxDate = new Date("October 05, 2030 00:00:00");
+        var cpt = 1;
+        while (cpt < 181) {
+            var compte = new Comptes();
+            var tmp = new Date(startDate);
+            compte.officialAmount = 500;
+            compte.unofficialAmount = 185;
+            compte.dueDate = tmp;
+            cpt = cpt + 1;
+
+            compte.save(function(err) {
+                if (err){
+                    console.log('Erreur sur insert');
+                }
+            });
+            //console.log(startDate);
+            startDate.setMonth(startDate.getMonth() + 1);
+        }
+    });
+}
+
 
 // START THE SERVER
 // =============================================================================
