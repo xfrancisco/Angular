@@ -122,21 +122,28 @@ comptesByDate.put(function(req, res) {
             if (err)
                 res.send(err);
             compte.officialPaid = req.body.officialPaid;
-            compte.unofficialPaid = req.body.officialPaid;
+            compte.unofficialPaid = req.body.unofficialPaid;
+            
             if (compte.officialPaid) {
                 compte.officialPaidDate = new Date();
+            }
+            else {
+                 compte.officialPaidDate = null;
             }
             
             if (compte.unofficialPaid) {
                 compte.unofficialPaidDate = new Date();
             }
+            else {
+                compte.unofficialPaidDate = null;
+            }
             
-            // save the bear
             compte.save(function(err) {
-                if (err)
-                    res.send(err);
+                if (err){
+                    res.json({ result : 'ERROR', message: err });
+                }
 
-                res.json({ message: 'Compte updated!' });
+                res.json({ result : 'SUCCESS', message: 'Compte mis à jour' });
             });
 
         });
@@ -199,7 +206,7 @@ if (isInit) {
         var startDate = new Date("October 05, 2015 00:00:00");
         var maxDate = new Date("October 05, 2030 00:00:00");
         var cpt = 1;
-        while (cpt < 181) {
+        while (cpt < 182) {
             var compte = new Comptes();
             var tmp = new Date(startDate);
             compte.officialAmount = 500;

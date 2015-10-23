@@ -1,16 +1,36 @@
+<!--<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />-->
+<!--<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />-->
+<!--https://scotch.io/tutorials/sort-and-filter-a-table-using-angular-->
 <div class="column_middle" ng-controller="ComptesController">
-    <div class="tweets">
-        <h3><i><img src="images/tweets.png" alt="" /> </i>Derniers messages</h3>		              
-        <div class="tweets_list">
-            <ul>
-                <li ng-repeat="detail in details">
-                    {{detail.officialAmount}}
-                    
-                    {{detail.unofficialAmount}}
-                    
-                    {{detail.dueDate | date: 'dd/MM/yyyy'}}
-                </li>
-            </ul>
-        </div>
+    <!--<div class="alert alert-info">
+        <p>Sort Type: {{ sortType }}</p>
+        <p>Sort Reverse: {{ sortReverse }}</p>
+        <p>Search Query: {{ searchFish }}</p>
+    </div>-->
+    <div class="column_middle_grid">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <td>Echéance</td>
+                    <td>Montant</td>
+                    <td>Intérêts</td>
+                    <td>Montant Payé</td>
+                    <td>Intérêts Payés</td>
+                    <td>Date de paiement du montant</td>
+                    <td>Date de paiement des intérêts</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="detail in details">
+                    <td>{{detail.dueDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{detail.officialAmount}}</td>
+                    <td>{{detail.unofficialAmount}}</td>
+                    <td>{{detail.officialPaid}}</td>
+                    <td>{{detail.unofficialPaid}}</td>
+                    <td>{{detail.officialPaidDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{detail.unofficialPaidDate | date: 'dd/MM/yyyy'}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

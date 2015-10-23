@@ -1,0 +1,29 @@
+<script type="text/javascript" src="js/Chart.js"></script>
+
+<div class="menu_box">
+ <h3>Menu</h3>
+   <div class="menu_box_list">
+        <ul>
+            <li class="active"><a href="#" class="events"><span>Events</span><label class="digits">5</label><div class="clear"></div></a></li>
+        </ul>
+  </div>
+</div>
+<div class="graph">
+    <canvas id="line-chart"></canvas>
+    <script>
+        var lineChartData = {
+            labels : ["Apr","May","Jun"],
+            datasets : [									
+                {
+                    fillColor : "rgba(255, 255, 255, 0)",
+                    strokeColor : "#FFF",
+                    pointColor : "#35aadc",
+                    pointStrokeColor : "#FFF",
+                    data : [21,48,35]
+                }
+            ]
+
+        }
+        var myLine = new Chart(document.getElementById("line-chart").getContext("2d")).Line(lineChartData);
+    </script>
+ </div>

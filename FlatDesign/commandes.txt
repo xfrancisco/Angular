@@ -1,0 +1,8 @@
+mongod.exe --dbpath ..\data
+
+node server.js init
+
+http://getbootstrap.com/css/#tables
+
+
+https://scotch.io/
