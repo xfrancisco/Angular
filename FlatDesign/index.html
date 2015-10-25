@@ -22,7 +22,9 @@
     <!--[endif]---->
         
     <script src="js/angular.min.js"></script>
+    <script src="js/angular-charts.min.js"></script>
     <script src="js/dirPagination.js"></script>
+    <script src="js/d3.min.js"></script>
     <script src="js/comptesApp.js"></script>
   </head>
 
@@ -38,7 +40,7 @@
                       <li><a href="index.html#">Aide</a></li>
                   </ul>
                   <form class="navbar-form navbar-right">
-                      <input type="text" class="form-control" placeholder="Search...">
+                      <input type="text" class="form-control" placeholder="Rechercher...">
                   </form>
               </div>
           </div>
@@ -66,7 +68,6 @@
                   </ul>
               </div>
              
-              <div id="messages" ng-include="'messages.html'"></div>
               <div id="column-middle" ng-include="'echeancier.html'"></div>
           </div>
       </div>

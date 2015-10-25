@@ -3,7 +3,8 @@ var baseUrl = 'http://localhost:8080/api/comptes';
 
 var comptesApp = angular.module('comptesApp', ['comptesModule']);
 
-var comptesModule = angular.module('comptesModule', ['angularUtils.directives.dirPagination']);
+var comptesModule = angular.module('comptesModule', ['angularUtils.directives.dirPagination','angularCharts']);
+
 
 comptesApp.run(function($rootScope) {
     $rootScope.callString = '';
@@ -39,8 +40,50 @@ comptesModule.controller('ComptesController', ['$scope', '$http', function($scop
     $scope.sortReverse  = false;  // set the default sort order
     $scope.searchPaymentPlan   = '';     // set the default search/filter term
     
-    fetch();
-    function fetch(){
+    $scope.chartType = 'bar';
+    
+    $scope.config = {
+      title: 'Récapitulatif',
+      tooltips: true,
+      labels: false,
+      mouseover: function() {},
+      mouseout: function() {},
+      click: function() {},
+      legend: {
+        display: true,
+        //could be 'left, right'
+        position: 'left'
+      },
+      innerRadius: 0, // applicable on pieCharts, can be a percentage like '50%'
+      lineLegend: 'lineEnd' // can be also 'traditional'
+    }
+    
+    $scope.data = {
+  "series": [
+    "Montant total",
+    "Intérêts",
+    "Montant dû",  
+    "Intérêts dûs",
+    "Montant payé",  
+    "Intérêts payés"
+  ],
+  "data": [
+    {
+      "x": "€",
+      "y": [
+        100000,
+        10000,
+        99500,
+        10000,
+        500,
+        0
+      ],
+      "tooltip": "This is a tooltip"
+    }
+  ]
+}
+        
+    $scope.fetch = function(){
         $http.get(baseUrl).success(function(response){ $scope.details = response; });
     };
 
@@ -64,7 +107,10 @@ comptesModule.controller('ComptesController', ['$scope', '$http', function($scop
         $http.put(baseUrl + '/' + detail._id, tmp2).success(function(response) {
             $scope.callString   = "Mise à jour de l'échéance du " + detail.dueDate;
             $scope.callResult = response.result;
+            $scope.fetch();
         });
     };
+    
+    $scope.fetch();
 
 }]);
