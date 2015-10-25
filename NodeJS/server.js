@@ -149,6 +149,22 @@ comptesByDate.put(function(req, res) {
         });
     });
 
+
+var allComptes = router.route('/statistics');
+
+allComptes.get(function(req, res) {
+        /*Comptes.find({}).sort('dueDate').exec(function(err, comptes) {
+            if (err)
+                res.send(err);*/
+            var result = new Object();
+            result.totalOfficialAmount = 100000;
+            result.totalUnofficialAmount = 15000;
+            result.dueOfficialAmount = 99500;
+            result.dueunofficialAmount = 15000;
+            result.paidOfficialAmount = 500;
+            result.paidOfficialAmount = 0;
+            res.json(result);
+        });
 /*
 // on routes that end in /bears/:bear_id
 // ----------------------------------------------------

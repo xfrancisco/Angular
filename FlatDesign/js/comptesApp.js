@@ -1,5 +1,5 @@
 'use strict';
-var baseUrl = 'http://localhost:8080/api/comptes';
+var baseUrl = 'http://localhost:8080/api/';
 
 var comptesApp = angular.module('comptesApp', ['comptesModule']);
 
@@ -34,15 +34,12 @@ comptesModule.filter('dateFilter', function ($filter) {
     }
 });
 
-comptesModule.controller('ComptesController', ['$scope', '$http', function($scope, $http){
+
+comptesModule.controller('ChartController', ['$scope', '$http', function($scope, $http){
         
-    $scope.sortType     = 'dueDate'; // set the default sort type
-    $scope.sortReverse  = false;  // set the default sort order
-    $scope.searchPaymentPlan   = '';     // set the default search/filter term
-    
     $scope.chartType = 'bar';
     
-    $scope.config = {
+    $scope.chartConfig = {
       title: 'Récapitulatif',
       tooltips: true,
       labels: false,
@@ -55,36 +52,54 @@ comptesModule.controller('ComptesController', ['$scope', '$http', function($scop
         position: 'left'
       },
       innerRadius: 0, // applicable on pieCharts, can be a percentage like '50%'
-      lineLegend: 'lineEnd' // can be also 'traditional'
+      lineLegend: 'lineEnd', // can be also 'traditional'
+      refreshDataOnly: true
     }
     
-    $scope.data = {
-  "series": [
-    "Montant total",
-    "Intérêts",
-    "Montant dû",  
-    "Intérêts dûs",
-    "Montant payé",  
-    "Intérêts payés"
-  ],
-  "data": [
-    {
-      "x": "€",
-      "y": [
-        100000,
-        10000,
-        99500,
-        10000,
-        500,
-        0
+    $scope.computedData = [0,0,0,0,0,0];
+    $scope.computeData = function(){
+        $http.get(baseUrl + 'statistics').success(function(response){ 
+            var tmp =   [response.totalOfficialAmount,
+                                    response.totalUnofficialAmount,
+                                    response.dueOfficialAmount,
+                                    response.dueunofficialAmount,
+                                    response.paidOfficialAmount,
+                                    response.paidOfficialAmount,
+                                    ];
+            $scope.chartData.data[0].y = tmp;
+        });
+    };
+    
+    
+    $scope.chartData = {
+        "series": [
+        "Montant total",
+        "Intérêts",
+        "Montant dû",  
+        "Intérêts dûs",
+        "Montant payé",  
+        "Intérêts payés"
       ],
-      "tooltip": "This is a tooltip"
+      "data": [
+        {
+          "x": "€",
+          "y": $scope.computedData,
+          "tooltip": "This is a tooltip"
+        }
+      ]
     }
-  ]
-}
+    
+    $scope.computeData();
+}]);
+
+comptesModule.controller('ComptesController', ['$scope', '$http', function($scope, $http){
         
+    $scope.sortType     = 'dueDate'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
+    $scope.searchPaymentPlan   = '';     // set the default search/filter term
+    
     $scope.fetch = function(){
-        $http.get(baseUrl).success(function(response){ $scope.details = response; });
+        $http.get(baseUrl + 'comptes').success(function(response){ $scope.details = response; });
     };
 
     $scope.rowClass = function(detail){
@@ -104,7 +119,7 @@ comptesModule.controller('ComptesController', ['$scope', '$http', function($scop
         tmp.officialPaid = detail.officialPaid;
         tmp.unofficialPaid = detail.unofficialPaid;
         var tmp2 = angular.toJson(tmp, true);
-        $http.put(baseUrl + '/' + detail._id, tmp2).success(function(response) {
+        $http.put(baseUrl + 'comptes/' + detail._id, tmp2).success(function(response) {
             $scope.callString   = "Mise à jour de l'échéance du " + detail.dueDate;
             $scope.callResult = response.result;
             $scope.fetch();
