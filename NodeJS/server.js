@@ -153,18 +153,28 @@ comptesByDate.put(function(req, res) {
 var allComptes = router.route('/statistics');
 
 allComptes.get(function(req, res) {
-        /*Comptes.find({}).sort('dueDate').exec(function(err, comptes) {
-            if (err)
-                res.send(err);*/
-            var result = new Object();
-            result.totalOfficialAmount = 100000;
-            result.totalUnofficialAmount = 15000;
-            result.dueOfficialAmount = 99500;
-            result.dueunofficialAmount = 15000;
-            result.paidOfficialAmount = 500;
-            result.paidOfficialAmount = 0;
-            res.json(result);
+    var result2 = new Object();
+    Comptes.aggregate(
+        { $group: {
+                _id :   null,
+                totalOfficialAmount: {$sum: "$officialAmount"},
+                totalUnofficialAmount: { $sum: "$unofficialAmount" }
+            }
+        },
+        function (err, result) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            result2.totalOfficialAmount = result[0].totalOfficialAmount;
+            result2.totalUnofficialAmount = result[0].totalUnofficialAmount;
+            result2.totalAmount = result2.totalOfficialAmount + result2.totalUnofficialAmount;
+            console.log(result2);
+            res.json(result2);
         });
+    return;
+});
+
 /*
 // on routes that end in /bears/:bear_id
 // ----------------------------------------------------

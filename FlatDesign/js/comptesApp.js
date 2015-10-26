@@ -56,15 +56,16 @@ comptesModule.controller('ChartController', ['$scope', '$http', function($scope,
       refreshDataOnly: true
     }
     
-    $scope.computedData = [0,0,0,0,0,0];
+    $scope.computedData = [0,0,0];
     $scope.computeData = function(){
         $http.get(baseUrl + 'statistics').success(function(response){ 
-            var tmp =   [response.totalOfficialAmount,
-                                    response.totalUnofficialAmount,
-                                    response.dueOfficialAmount,
-                                    response.dueunofficialAmount,
-                                    response.paidOfficialAmount,
-                                    response.paidOfficialAmount,
+            var tmp =   [           response.totalAmount,
+                                    response.totalOfficialAmount,
+                                    response.totalUnofficialAmount
+                                    //response.dueOfficialAmount,
+                                    //response.dueunofficialAmount,
+                                    //response.paidOfficialAmount,
+                                    //response.paidUnofficialAmount
                                     ];
             $scope.chartData.data[0].y = tmp;
         });
@@ -73,18 +74,18 @@ comptesModule.controller('ChartController', ['$scope', '$http', function($scope,
     
     $scope.chartData = {
         "series": [
+        "Totalité",
         "Montant total",
-        "Intérêts",
-        "Montant dû",  
-        "Intérêts dûs",
-        "Montant payé",  
-        "Intérêts payés"
+        "Intérêts"
+        //"Montant dû",  
+        //"Intérêts dûs",
+        //"Montant payé",  
+        //"Intérêts payés"
       ],
       "data": [
         {
           "x": "€",
-          "y": $scope.computedData,
-          "tooltip": "This is a tooltip"
+          "y": $scope.computedData
         }
       ]
     }

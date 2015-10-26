@@ -4,5 +4,6 @@ node server.js init
 
 http://getbootstrap.com/css/#tables
 
-
 https://scotch.io/
+
+chrome.exe --disable-web-security
