@@ -7,3 +7,6 @@ http://getbootstrap.com/css/#tables
 https://scotch.io/
 
 chrome.exe --disable-web-security
+
+
+http://www.thefourtheye.in/2013/04/mongodb-aggregation-framework-basics.html
