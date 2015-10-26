@@ -154,6 +154,7 @@ var allComptes = router.route('/statistics');
 
 allComptes.get(function(req, res) {
     var result2 = new Object();
+    
     Comptes.aggregate(
         { $group: {
                 _id :   null,
@@ -169,9 +170,49 @@ allComptes.get(function(req, res) {
             result2.totalOfficialAmount = result[0].totalOfficialAmount;
             result2.totalUnofficialAmount = result[0].totalUnofficialAmount;
             result2.totalAmount = result2.totalOfficialAmount + result2.totalUnofficialAmount;
-            console.log(result2);
-            res.json(result2);
+            Comptes.aggregate(
+                {
+                    $match: {officialPaidDate:{$ne:null}}
+                },
+                { $group: {
+                        _id :   null,
+                        totalPaidOfficialAmount: {$sum: "$officialAmount"},
+                    }
+                },
+                function (err, result) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    result2.totalPaidOfficialAmount = 0;
+                    if (result.length > 0){
+                        result2.totalPaidOfficialAmount = result[0].totalPaidOfficialAmount;
+                    }
+                    
+                    Comptes.aggregate(
+                    {
+                        $match: {unofficialPaidDate:{$ne:null}}
+                    },
+                    { $group: {
+                            _id :   null,
+                            totalPaidUnofficialAmount: {$sum: "$unofficialAmount"},
+                        }
+                    },
+                    function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        result2.totalPaidUnofficialAmount = 0;
+                        if (result.length > 0){
+                            result2.totalPaidUnofficialAmount = result[0].totalPaidUnofficialAmount;
+                        }
+                        res.json(result2);
+                    });
+                });
         });
+    
+    
     return;
 });
 

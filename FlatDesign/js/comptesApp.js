@@ -11,20 +11,12 @@ comptesApp.run(function($rootScope) {
     $rootScope.callString = '';
 });
 
-/*comptesModule.service('compteService', [function () {
-    this.callString   = '';
-    this.callResult   = '';
-    
-    this.initialize = function () {
+comptesModule.service('compteService', [function () {
+    this.refreshCh = function () {
         this.callString   = '';
         this.callResult   = '';
     }
-    
-    this.populate = function (result, message) {
-        this.callString   = message;
-        this.callResult   = result;
-    }
-}]);*/
+}]);
 
 
 comptesModule.filter('dateFilter', function ($filter) {
@@ -56,16 +48,14 @@ comptesModule.controller('ChartController', ['$scope', '$http', function($scope,
       refreshDataOnly: true
     }
     
-    $scope.computedData = [0,0,0];
+    $scope.computedData = [];
     $scope.computeData = function(){
         $http.get(baseUrl + 'statistics').success(function(response){ 
             var tmp =   [           response.totalAmount,
                                     response.totalOfficialAmount,
-                                    response.totalUnofficialAmount
-                                    //response.dueOfficialAmount,
-                                    //response.dueunofficialAmount,
-                                    //response.paidOfficialAmount,
-                                    //response.paidUnofficialAmount
+                                    response.totalUnofficialAmount,
+                                    response.totalPaidOfficialAmount,
+                                    response.totalPaidUnofficialAmount
                                     ];
             $scope.chartData.data[0].y = tmp;
         });
@@ -76,11 +66,9 @@ comptesModule.controller('ChartController', ['$scope', '$http', function($scope,
         "series": [
         "Totalité",
         "Montant total",
-        "Intérêts"
-        //"Montant dû",  
-        //"Intérêts dûs",
-        //"Montant payé",  
-        //"Intérêts payés"
+        "Intérêts",
+        "Montant payé",  
+        "Intérêts payés"
       ],
       "data": [
         {
@@ -91,9 +79,13 @@ comptesModule.controller('ChartController', ['$scope', '$http', function($scope,
     }
     
     $scope.computeData();
+    
+    $scope.$on('data-updated', function(event, myId) {
+        $scope.computeData();
+    });
 }]);
 
-comptesModule.controller('ComptesController', ['$scope', '$http', function($scope, $http){
+comptesModule.controller('ComptesController', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope){
         
     $scope.sortType     = 'dueDate'; // set the default sort type
     $scope.sortReverse  = false;  // set the default sort order
@@ -124,6 +116,7 @@ comptesModule.controller('ComptesController', ['$scope', '$http', function($scop
             $scope.callString   = "Mise à jour de l'échéance du " + detail.dueDate;
             $scope.callResult = response.result;
             $scope.fetch();
+            $rootScope.$broadcast('data-updated', detail._id);
         });
     };
     
