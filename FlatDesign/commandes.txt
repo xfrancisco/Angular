@@ -10,3 +10,9 @@ chrome.exe --disable-web-security
 
 
 http://www.thefourtheye.in/2013/04/mongodb-aggregation-framework-basics.html
+
+https://carlosazaustre.es/blog/autenticacion-con-token-en-angularjs/
+
+http://brewhouse.io/blog/2014/12/09/authentication-made-simple-in-single-page-angularjs-applications.html
+
+https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
