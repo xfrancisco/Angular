@@ -92,7 +92,7 @@ comptesModule.controller('ComptesController', ['$scope', '$http', '$rootScope', 
     $scope.searchPaymentPlan   = '';     // set the default search/filter term
     
     $scope.fetch = function(){
-        $http.get(baseUrl + 'comptes').success(function(response){ $scope.details = response; });
+        $http.get(baseUrl + 'account').success(function(response){ $scope.details = response; });
     };
 
     $scope.rowClass = function(detail){
@@ -112,7 +112,7 @@ comptesModule.controller('ComptesController', ['$scope', '$http', '$rootScope', 
         tmp.officialPaid = detail.officialPaid;
         tmp.unofficialPaid = detail.unofficialPaid;
         var tmp2 = angular.toJson(tmp, true);
-        $http.put(baseUrl + 'comptes/' + detail._id, tmp2).success(function(response) {
+        $http.put(baseUrl + 'account/' + detail._id, tmp2).success(function(response) {
             $scope.callString   = "Mise à jour de l'échéance du " + detail.dueDate;
             $scope.callResult = response.result;
             $scope.fetch();
@@ -122,4 +122,25 @@ comptesModule.controller('ComptesController', ['$scope', '$http', '$rootScope', 
     
     $scope.fetch();
 
+}]);
+
+comptesModule.controller('LoginController', ['$scope', '$http', '$window', function($scope, $http, $window){
+    $scope.login = function(userName, password){
+        var tmp = new Object();
+        tmp.name = userName;
+        tmp.password = password;
+        var userjson = angular.toJson(tmp, true);
+        
+        $http.post(baseUrl + 'authenticate', userjson).success(function(response) {
+            console.log(response);
+            $window.sessionStorage.token = response.token;
+            $scope.message = 'Welcome';
+        }).error(function (data, status, headers, config) {
+            // Erase the token if the user fails to log in
+            delete $window.sessionStorage.token;
+
+            // Handle login errors here
+            $scope.message = 'Error: Invalid user or password';
+        });
+    };
 }]);

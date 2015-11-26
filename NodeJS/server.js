@@ -28,9 +28,13 @@ var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000
 // Parsing des paramètres du script
 var isInit = false;
 var isOnline = false;
+var isSecurity = false;
+
 process.argv.forEach(function (val, index, array) {
     if (val == 'init')
         isInit = true;
+    if (val == 'secu')
+        isSecurity = true;
 });
 
 // Formattage de l'url de mongo
@@ -58,28 +62,33 @@ var router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (isSecurity) {
+        // check header or url parameters or post parameters for token
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-    // decode token
-    if (token) {
-        // verifies secret and checks exp
-        jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
-            if (err) {
-                return res.json({ success: false, message: 'Failed to authenticate token.' });    
-            } else {
-                // if everything is good, save to request for use in other routes
-                req.decoded = decoded;    
-                next();
-            }
-        });
-    } else {
-        // if there is no token
-        // return an error
-        return res.status(403).send({ 
-            success: false, 
-            message: 'No token provided.' 
-        });
+        // decode token
+        if (token) {
+            // verifies secret and checks exp
+            jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token.' });    
+                } else {
+                    // if everything is good, save to request for use in other routes
+                    req.decoded = decoded;    
+                    next();
+                }
+            });
+        } else {
+            // if there is no token
+            // return an error
+            return res.status(403).send({ 
+                success: false, 
+                message: 'No token provided.' 
+            });
+        }
+    }
+    else {
+        next();
     }
 });
 
@@ -118,10 +127,9 @@ router.post('/users', function(req, res) {
 // =============================================================================
 
 router.post('/authenticate', function(req, res) {
-
   // find the user
   User.findOne({
-    name: req.body.name
+    cuser: req.body.name
   }, function(err, user) {
 
     if (err) throw err;
@@ -131,14 +139,14 @@ router.post('/authenticate', function(req, res) {
     } else if (user) {
 
       // check if password matches
-      if (user.password != req.body.password) {
+      if (user.pass != req.body.password) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
 
         // if user is found and password is right
         // create a token
-        var token = jwt.sign(user, app.get('superSecret'), {
-          expiresInMinutes: 1440 // expires in 24 hours
+        var token = jwt.sign(user, config.secret, {
+          expiresIn: 86400 // expires in 24 hours
         });
 
         // return the information including token as JSON
@@ -313,7 +321,7 @@ if (isInit) {
     console.log('**************Initialize Database****************');
     Account.remove({}, function(err, account) {
         if (err) {
-            console.log('Error during initialization');
+            console.log('Error during initialization of payment plan');
             exit;
         }
         var startDate = new Date("October 05, 2015 00:00:00");
@@ -329,12 +337,28 @@ if (isInit) {
 
             account.save(function(err) {
                 if (err){
-                    console.log('Erreur sur insert');
+                    console.log("Erreur sur insert d'échéance");
                 }
             });
             //console.log(startDate);
             startDate.setMonth(startDate.getMonth() + 1);
         }
+    });
+    
+    User.remove({}, function(err, account) {
+        if (err) {
+            console.log('Error during initialization of users');
+            exit;
+        }
+        var user = new User();
+        user.cuser = 'xavier';
+        user.pass = 'xavier';
+        user.indadmin = true;
+        user.save(function(err) {
+            if (err){
+                console.log("Erreur sur insert d'user");
+            }
+        });
     });
 }
 
@@ -342,4 +366,4 @@ if (isInit) {
 // START THE SERVER
 // =============================================================================
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log('Listening on port ' + port);

@@ -1,0 +1,13 @@
+<div ng-controller="LoginController">
+<h1>Bienvenue au site de suivi des comptes</h1>
+
+<input type="text" ng-model="username" placeholder="username"><br>
+<input type="password" ng-model="password" placeholder="password"><br>
+<br>
+
+<button ng-click="register()" class="btn btn-primary">Register</button>
+<button ng-click="login(username, password)" class="btn btn-primary">Login</button>
+<button ng-click="logout()" ng-show="main.isAuthed()" class="btn btn-primary">Logout</button>
+</div>
+
+
